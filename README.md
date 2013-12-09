@@ -1,5 +1,7 @@
 # Color String
 
+by [richjenks.com](http://richjenks.com)
+
 Converts a string…into a color!
 
 By using HSL and allowing saturation and lightness to be consistent between uses, every color generated will be of the same tone. Saturation and Lightness can be customised to change the tone.
