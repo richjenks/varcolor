@@ -29,11 +29,11 @@ class ColorString {
 	 * Format defines the output format ('hsl', 'rgb' or 'hex')
 	 */
 
-	private $hue		= 50;
-	private $saturation	= 50;
-	private $lightness	= 50;
-	private $string		= '';
-	private $format		= 'hsl';
+	private $hue        = 50;
+	private $saturation = 50;
+	private $lightness  = 50;
+	private $string     = '';
+	private $format     = 'hsl';
 
 	/**
 	 * Obligatory Getter functions
@@ -47,11 +47,11 @@ class ColorString {
 	 * @return int|string
 	 */
 
-	public function get_hue()			{return $this->hue;}
-	public function get_saturation()	{return $this->saturation;}
-	public function get_lightness()		{return $this->lightness;}
-	public function get_string()		{return $this->string;}
-	public function get_format()		{return $this->format;}
+	public function get_hue()        {return $this->hue;}
+	public function get_saturation() {return $this->saturation;}
+	public function get_lightness()  {return $this->lightness;}
+	public function get_string()     {return $this->string;}
+	public function get_format()     {return $this->format;}
 
 	/**
 	 * Obligatory Setter functions
@@ -68,11 +68,11 @@ class ColorString {
 	 * String and Format expect strings
 	 */
 
-	public function set_hue($hue)					{$this->hue = $hue;}
-	public function set_saturation($saturation)		{$this->saturation = $saturation;}
-	public function set_lightness($lightness)		{$this->lightness = $lightness;}
-	public function set_string($string)				{$this->string = $string;}
-	public function set_format($format)				{$this->format = $format;}
+	public function set_hue($hue)               {$this->hue = $hue;}
+	public function set_saturation($saturation) {$this->saturation = $saturation;}
+	public function set_lightness($lightness)   {$this->lightness = $lightness;}
+	public function set_string($string)         {$this->string = $string;}
+	public function set_format($format)         {$this->format = $format;}
 
 
 	/**
@@ -87,11 +87,11 @@ class ColorString {
 
 		// Generate hue
 		if($this->string != '') {
-			$this->hue = md5($this->string);			// MD5 the string
-			$this->hue = substr($this->hue,0,3);		// Take the first 3 chars (hex value between 0–4095)
-			$this->hue = hexdec($this->hue);			// Convert hex to decimal int
-			$this->hue = $this->hue / 11.4066852368;	// Divide to get float between 0–359
-			$this->hue = round($this->hue);				// Round down to nearest int
+			$this->hue = md5($this->string);         // MD5 the string
+			$this->hue = substr($this->hue,0,3);     // Take the first 3 chars (hex value between 0–4095)
+			$this->hue = hexdec($this->hue);         // Convert hex to decimal int
+			$this->hue = $this->hue / 11.4066852368; // Divide to get float between 0–359
+			$this->hue = round($this->hue);          // Round down to nearest int
 		}
 
 		// Format color — default to HSL
