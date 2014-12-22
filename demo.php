@@ -1,9 +1,9 @@
 <?php
-	require('colorstring.php');
-	$cs = new ColorString;
+	require('VarColor.php');
+	$vc = new VarColor;
 	$strings = [
 		'Hello, World!',
-		'Color String',
+		'VarColor',
 		'such color',
 		'so hue',
 		'very hsl',
@@ -13,42 +13,46 @@
 <html>
 	<head>
 		<meta charset="utf-8">
-		<title>ColorString</title>
+		<title>VarColor</title>
 		<style>
 			body {
 				font-family: sans-serif;
 			}
-			.cs {
+			.vc {
 				color: white;
 				font-weight: bold;
 			}
 		</style>
 	</head>
 	<body>
-		<h1>ColorString</h1>
+		<h1>VarColor</h1>
 		<p>With default Saturation and Lightness of 50</p>
 		<?php
+			$options = ['bare' => false];
 			foreach ($strings as $string) {
-				$cs->set_string($string);
-				echo '<p class="cs" style="background: hsl('.$cs->colorstring().');padding: 1em;">'.$cs->get_string().' hsl('.$cs->colorstring().')</p>';
+				echo '<p class="vc" style="background: '.$vc->go($string, $options).';padding: 1em;">'.$string.': '.$vc->go($string, $options).'</p>';
 			}
 		?>
 		<p>With Saturation set to 80 and Lightness set to 25</p>
 		<?php
-			$cs->set_saturation(80);
-			$cs->set_lightness(25);
+			$options = [
+				'saturation' => 80,
+				'lightness'  => 20,
+				'bare'       => false,
+			];
 			foreach ($strings as $string) {
-				$cs->set_string($string);
-				echo '<p class="cs" style="background: hsl('.$cs->colorstring().');padding: 1em;">'.$cs->get_string().' hsl('.$cs->colorstring().')</p>';
+				echo '<p class="vc" style="background: '.$vc->go($string, $options).';padding: 1em;">'.$string.': '.$vc->go($string, $options).'</p>';
 			}
 		?>
 		<p>With Saturation set to 40 and Lightness set to 80</p>
 		<?php
-			$cs->set_saturation(40);
-			$cs->set_lightness(80);
+			$options = [
+				'saturation' => 40,
+				'lightness'  => 70,
+				'bare'       => false,
+			];
 			foreach ($strings as $string) {
-				$cs->set_string($string);
-				echo '<p class="cs" style="background: hsl('.$cs->colorstring().');padding: 1em;">'.$cs->get_string().' hsl('.$cs->colorstring().')</p>';
+				echo '<p class="vc" style="background: '.$vc->go($string, $options).';padding: 1em;">'.$string.': '.$vc->go($string, $options).'</p>';
 			}
 		?>
 	</body>

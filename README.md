@@ -1,37 +1,42 @@
-# Color String
+# VarColor
 
-by [richjenks.com](http://richjenks.com)
+Turns any variable into a color - vars will yield the same color every time!
 
-Converts a string…into a color!
+Can be used for styling items based on their name, perhaps to avoid hardcoding colors or to give user interfaces some variety without having to develop color options for end users.
 
-By using HSL and allowing saturation and lightness to be consistent between uses, every color generated will be of the same tone. Saturation and Lightness can be customised to change the tone.
-
-Also, because it uses MD5, a string will always generate the same color. Useful for allowing elements of an app to be styled without requiring users to select colors manually, e.g. give an object a color based on its title.
-
-The code is heavily-documented so use the source, Luke!
-
-## Usage
-
-### Default Parameters
+## Basic Usage
 
 ```php
-require('colorstring.php');
-$cs = new ColorString;
+require('VarColor.php');
+$string = 'Awesome';
 
-$cs->set_string('Awesome');
-echo '<h1 style="background: hsl('.$cs->colorstring().');padding: 1em;">'.$cs->get_string().'</h1>';
+echo '<h1 style="background: hsl('.$VarColor::go($string).');padding: 1em;">'.$string.'</h1>';
 ```
 
-### Custom Parameters
+## Options
+
+Pass options in an array as the second parameter to `go`. Example:
 
 ```php
-require('colorstring.php');
-$cs = new ColorString;
+$options = [
+    'saturation' => 75,
+    'lightness'  => 60,
+    'format'     => 'hex',
+    'bare'       => false,
+];
+echo VarColor::go('Sup', $options);
 
-$cs->set_string('Epic');
-$cs->set_saturation(75);
-$cs->set_lightness(60);
-$cs->set_format('hex');
-
-echo '<h1 style="background: #'.$cs->colorstring().';padding: 1em;">'.$cs->get_string().'</h1>';
+// Outputs: #4c6de5
 ```
+
+- `saturation` / `lightness`
+
+    The Saturation / Lightness of the generated color. Defaults to 50.
+
+- `format`
+
+    The format to return the color in, either `hsl`, `hex` or `rgb`. Defaults to 'hex'.
+
+- `bare`
+
+    When true, outputs bare variables in an array (one for each part, e.g. red, green and blue separately). When false, wraps the variables for use in CSS.
