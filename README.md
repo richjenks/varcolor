@@ -10,7 +10,7 @@ Can be used for styling items based on their name, perhaps to avoid hardcoding c
 require('VarColor.php');
 $string = 'Awesome';
 
-echo '<h1 style="background: hsl('.$VarColor::go($string).');padding: 1em;">'.$string.'</h1>';
+echo '<h1 style="background: '.$VarColor::go($string, ['bare'=>false]).';padding: 1em;">'.$string.'</h1>';
 ```
 
 ## Options
