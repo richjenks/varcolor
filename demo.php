@@ -30,29 +30,23 @@
 		<?php
 			$options = ['bare' => false];
 			foreach ($strings as $string) {
-				echo '<p class="vc" style="background: '.$vc->go($string, $options).';padding: 1em;">'.$string.': '.$vc->go($string, $options).'</p>';
+				echo '<p class="vc" style="background: #'.$vc->color($string, $options).';padding: 1em;">'.$string.': '.$vc->color($string, $options).'</p>';
 			}
 		?>
 		<p>With Saturation set to 80 and Lightness set to 25</p>
 		<?php
-			$options = [
-				'saturation' => 80,
-				'lightness'  => 20,
-				'bare'       => false,
-			];
+			$vc->saturation = 80;
+			$vc->lightness = 25;
 			foreach ($strings as $string) {
-				echo '<p class="vc" style="background: '.$vc->go($string, $options).';padding: 1em;">'.$string.': '.$vc->go($string, $options).'</p>';
+				echo '<p class="vc" style="background: #'.$vc->color($string, $options).';padding: 1em;">'.$string.': '.$vc->color($string, $options).'</p>';
 			}
 		?>
 		<p>With Saturation set to 40 and Lightness set to 80</p>
 		<?php
-			$options = [
-				'saturation' => 40,
-				'lightness'  => 70,
-				'bare'       => false,
-			];
+			$vc->saturation = 40;
+			$vc->lightness = 80;
 			foreach ($strings as $string) {
-				echo '<p class="vc" style="background: '.$vc->go($string, $options).';padding: 1em;">'.$string.': '.$vc->go($string, $options).'</p>';
+				echo '<p class="vc" style="background: #'.$vc->color($string, $options).';padding: 1em;">'.$string.': '.$vc->color($string, $options).'</p>';
 			}
 		?>
 	</body>

@@ -11,30 +11,46 @@
 
 class VarColor {
 
-	/**
-	 * go
-	 *
-	 * Starts the process...
-	 *
-	 * Options include:
-	 * - saturation: int between 0-100 (default: 50)
-	 * - lightness: int between 0-100 (default: 50)
-	 * - format: 'hex', 'rgb' or 'hsl' (default: 'hex')
-	 * - bare: true or false, array of vars or CSS value (default: true)
-	 *
-	 * @param mixed $string Variable to be used
-	 * @param array $options Color options
-	 *
-	 * @return array|string Array of parts or string for color
-	 */
+	// Base color vars
+	public $hue        = 180;
+	public $saturation = 50;
+	public $lightness  = 50;
 
-	public static function go($string = '', $options = array()) {
+	// Return formats
+	const HEX = 0;
+	const RGB = 1;
+	const HSL = 2;
+
+	// Current return format
+	public $format = 0;
+
+	/**
+	 * When you don't care about "theming" and just want a quick colour
+	 * Color will have no relation to that of `color()`
+	 *
+	 * @param  mixed  $string Input
+	 * @return string Hex color
+	 */
+	public function hex($string) {
+		if (!is_string($string)) $string = serialize($string);
+		$string = md5($string);
+		$string = substr($string, 0, 6);
+		return strtoupper($string);
+	}
+
+	/**
+	 * Generates a color from current options
+	 *
+	 * @param  mixed $string Variable to be used
+	 * @return mixed Hex color string or array of parts
+	 */
+	public function color($string = '') {
+
+		// Check variables are valid before continuing
+		$this->check();
 
 		// Ensure input is string
 		if (!is_string($string)) $string = serialize($string);
-
-		// Ensure options are valid
-		$options = self::sanitize_input($options);
 
 		/**
 		 * MD5 the string, take the first 3 chars (hex value between 0–4095)
@@ -42,54 +58,77 @@ class VarColor {
 		 * to get a float between 0-359. Round it down to nearest int for hue
 		 */
 		if ($string != '') {
-			$options['hue'] = md5($string);
-			$options['hue'] = substr($options['hue'],0,3);
-			$options['hue'] = hexdec($options['hue']);
-			$options['hue'] = $options['hue'] / 11.4066852368;
-			$options['hue'] = (int) round($options['hue']);
+			$this->hue = md5($string);
+			$this->hue = substr($this->hue, 0, 3);
+			$this->hue = hexdec($this->hue);
+			$this->hue = $this->hue / 11.4066852368;
+			$this->hue = (int) round($this->hue);
 		}
 
 		// Return required color
-		return self::output($options);
+		return self::output();
 
 	}
 
-	private static function sanitize_input($options) {
+	/**
+	 * Checks variables are valid and throws exception if not
+	 */
+	private function check() {
+		if ($this->saturation < 0 || $this->saturation > 100)
+			throw new Exception('Saturation must be between 0–100', 1);
+		if ($this->lightness < 0 || $this->lightness > 100)
+			throw new Exception('Lightness must be between 0–100', 1);
+		if (!in_array($this->format, [self::HEX, self::RGB, self::HSL]))
+			throw new Exception('Format must be HEX, RGB or HSL', 1);
+	}
 
-		// Ensure all options are set
-		$defaults = array(
-			'saturation' => 50,
-			'lightness'  => 50,
-			'format'     => 'hex',
-			'bare'       => true,
-		);
-		$options = array_merge($defaults, $options);
+	/**
+	 * output
+	 *
+	 * Constructs the required return value
+	 */
+	private function output() {
 
-		// Saturation must be between 0-100
-		if (isset($options['saturation'])) {
-			if ($options['saturation'] > 100)
-				$options['saturation'] = 100;
-			if ($options['saturation'] < 0)
-				$options['saturation'] = 0;
+		// HSL
+		if ($this->format === self::HSL) {
+			return [
+				'h' => $this->hue,
+				's' => $this->saturation,
+				'l' => $this->lightness,
+			];
 		}
 
-		// Lightness must be between 0-100
-		if (isset($options['lightness'])) {
-			if ($options['lightness'] > 100)
-				$options['lightness'] = 100;
-			if ($options['lightness'] < 0)
-				$options['lightness'] = 0;
+		// RGB
+		if ($this->format === self::RGB) {
+			$rgb = self::hsl2rgb(
+				$this->hue / 360,
+				$this->saturation / 100,
+				$this->lightness / 100
+			);
+			return [
+				'r' => $rgb['r'],
+				'g' => $rgb['g'],
+				'b' => $rgb['b'],
+			];
 		}
 
-		// Format must be 'hex', 'rgb', or 'hsl'
-		$formats = array('hex', 'rgb', 'hsl');
-		if (!in_array($options['format'], $formats))
-			$options['format'] = 'hex';
+		// HEX
+		if ($this->format === self::HEX) {
 
-		// Bare must must be a bool
-		if (!is_bool($options['bare'])) $options['bare'] = true;
+			// Convert to RGB
+			$rgb = self::hsl2rgb(
+				$this->hue / 360,
+				$this->saturation / 100,
+				$this->lightness / 100
+			);
 
-		return $options;
+			// Convert to hex and pad
+			foreach ($rgb as $key => $val)
+				$rgb[$key] = str_pad(dechex($val), 2, '0', STR_PAD_LEFT);
+
+			return strtoupper($rgb['r'].$rgb['g'].$rgb['b']);
+
+		}
 
 	}
 
@@ -107,8 +146,7 @@ class VarColor {
 	 *
 	 * @return array Indexes 'r', 'g', and 'b' hold the color's RGB values
 	 */
-
-	private static function hsl2rgb($h, $s, $l){
+	private function hsl2rgb($h, $s, $l){
 		$r = $l;
 		$g = $l;
 		$b = $l;
@@ -167,77 +205,6 @@ class VarColor {
 			'g' => (int) floor($g * 255),
 			'b' => (int) floor($b * 255),
 		);
-	}
-
-	/**
-	 * output
-	 *
-	 * Constructs the required return value
-	 */
-
-	private static function output($options) {
-
-		// HSL
-		if ($options['format'] === 'hsl') {
-			if ($options['bare']) {
-				return array(
-					'hue' => $options['hue'],
-					'saturation' => $options['saturation'],
-					'lightness' => $options['lightness'],
-				);
-			} else {
-				return 'hsl('.$options['hue'].','.$options['saturation'].'%,'.$options['lightness'].'%)';
-			}
-		}
-
-		// RGB
-		if ($options['format'] === 'rgb') {
-
-			// Convert to RGB
-			$rgb = self::hsl2rgb(
-				$options['hue'] / 360,
-				$options['saturation'] / 100,
-				$options['lightness'] / 100
-			);
-
-			if ($options['bare']) {
-				return array(
-					'r' => $rgb['r'],
-					'g' => $rgb['g'],
-					'b' => $rgb['b'],
-				);
-			} else {
-				return 'rgb('.$rgb['r'].','.$rgb['g'].','.$rgb['b'].')';
-			}
-
-		}
-
-		// HEX
-		if ($options['format'] === 'hex') {
-
-			// Convert to RGB
-			$rgb = self::hsl2rgb(
-				$options['hue'] / 360,
-				$options['saturation'] / 100,
-				$options['lightness'] / 100
-			);
-
-			// Convert to hex and pad
-			foreach ($rgb as $key => $val)
-				$rgb[$key] = str_pad(dechex($val), 2, '0', STR_PAD_LEFT);
-
-			if ($options['bare']) {
-				return array(
-					'r' => $rgb['r'],
-					'g' => $rgb['g'],
-					'b' => $rgb['b'],
-				);
-			} else {
-				return '#'.$rgb['r'].$rgb['g'].$rgb['b'];
-			}
-
-		}
-
 	}
 
 }
