@@ -28,7 +28,6 @@
 		<h1>VarColor</h1>
 		<p>With default Saturation and Lightness of 50</p>
 		<?php
-			$options = ['bare' => false];
 			foreach ($strings as $string) {
 				echo '<p class="vc" style="background: #'.$vc->color($string, $options).';padding: 1em;">'.$string.': '.$vc->color($string, $options).'</p>';
 			}
