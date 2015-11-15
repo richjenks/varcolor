@@ -71,6 +71,25 @@ class VarColor {
 	}
 
 	/**
+	 * Determines whether black or white has the most contrast with the given hex
+	 * text set over a color should be black or white
+	 * The "centre point" seems the most logical cutt-off, but in practice, leaning more torwards white is more readable
+	 *
+	 * @see https://24ways.org/2010/calculating-color-contrast/
+	 *
+	 * @param  string $hex Color in hex format
+	 * @return string 'black' or 'white'
+	 */
+	function contrast($hex){
+		$r = hexdec(substr($hex,0,2));
+		$g = hexdec(substr($hex,2,2));
+		$b = hexdec(substr($hex,4,2));
+		$c = (($r*299)+($g*587)+($b*114))/1000;
+		// return ($c >= 128) ? 'black' : 'white';
+		return ($c >= 160) ? 'black' : 'white';
+	}
+
+	/**
 	 * Checks variables are valid and throws exception if not
 	 */
 	private function check() {

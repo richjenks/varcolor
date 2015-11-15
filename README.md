@@ -6,6 +6,8 @@ Can be used for styling items based on their name, perhaps to avoid hardcoding c
 
 Supports "theming" — multiple colors can be generated with the same lightness and/or saturation so they don't look clash with your design. For example, perhaps you need pastels or dark, saturated colors.
 
+See `demo.php` for usage examples.
+
 ## Basic Usage
 
 VarColor has two main functions:
@@ -51,4 +53,14 @@ For example:
 $vc->format = $vc::HSL;
 $vc->color('Hello, World!');
 // Returns: ['h' => 143, 's' => 50, 'l' => 50]
+```
+
+## Contrast function
+
+The `contrast()` function determines whether black or white has the most contrast with a given hex color and is useful for determining the color for overlayed text. For example:
+
+```php
+$color = $vc->color('Hello, World');
+echo $text = $vc->contrast($color);
+// white
 ```

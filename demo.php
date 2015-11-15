@@ -1,6 +1,5 @@
 <?php
 	require('VarColor.php');
-	$vc = new VarColor;
 	$strings = [
 		'Hello, World!',
 		'VarColor',
@@ -9,6 +8,19 @@
 		'very hsl',
 		'wow',
 	];
+	function h1($string, $saturation, $lightness) {
+		$vc = new VarColor;
+		$vc->saturation = $saturation;
+		$vc->lightness = $lightness;
+		$background = $vc->color($string);
+		$color = $vc->contrast($background);
+		return sprintf(
+			'<p class="vc" style="background: #%1$s; color: %2$s;">%3$s</p>',
+			$background,
+			$color,
+			$string
+		);
+	}
 ?><!doctype html>
 <html>
 	<head>
@@ -21,32 +33,17 @@
 			.vc {
 				color: white;
 				font-weight: bold;
+				padding: .5em;
 			}
 		</style>
 	</head>
 	<body>
 		<h1>VarColor</h1>
 		<p>With default Saturation and Lightness of 50</p>
-		<?php
-			foreach ($strings as $string) {
-				echo '<p class="vc" style="background: #'.$vc->color($string, $options).';padding: 1em;">'.$string.': '.$vc->color($string, $options).'</p>';
-			}
-		?>
+		<?php foreach ($strings as $string) echo h1($string, 50, 50); ?>
 		<p>With Saturation set to 80 and Lightness set to 25</p>
-		<?php
-			$vc->saturation = 80;
-			$vc->lightness = 25;
-			foreach ($strings as $string) {
-				echo '<p class="vc" style="background: #'.$vc->color($string, $options).';padding: 1em;">'.$string.': '.$vc->color($string, $options).'</p>';
-			}
-		?>
+		<?php foreach ($strings as $string) echo h1($string, 80, 25); ?>
 		<p>With Saturation set to 40 and Lightness set to 80</p>
-		<?php
-			$vc->saturation = 40;
-			$vc->lightness = 80;
-			foreach ($strings as $string) {
-				echo '<p class="vc" style="background: #'.$vc->color($string, $options).';padding: 1em;">'.$string.': '.$vc->color($string, $options).'</p>';
-			}
-		?>
+		<?php foreach ($strings as $string) echo h1($string, 40, 80); ?>
 	</body>
 </html>
